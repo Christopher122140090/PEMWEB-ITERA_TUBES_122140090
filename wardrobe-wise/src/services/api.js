@@ -1,13 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // Ganti dengan URL backend Anda
+  baseURL: 'http://localhost:5000/api', // Adjust the base URL to your backend
 });
 
-export const getProducts = () => {
-  return api.get('/produk');  // Endpoint untuk mendapatkan produk
-};
-
-export const addProduct = (produkData) => {
-  return api.post('/produk', produkData);  // Endpoint untuk menambah produk
-};
+export const getInventory = () => api.get('/inventory');
+export const getProducts = () => api.get('/products');
