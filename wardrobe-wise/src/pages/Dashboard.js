@@ -1,6 +1,6 @@
 // src/pages/Dashboard.js
 import React from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, Paper } from '@mui/material';
 import { Line } from 'react-chartjs-2';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
@@ -42,122 +42,78 @@ const Dashboard = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        <Grid xs={12} md={8}>
-          <Grid container spacing={3}>
-            <Grid xs={12} sm={6} md={3}>
-              <Box
-                sx={{
-                  bgcolor: '#F3F4F6',
-                  p: 2,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="h6">Total Items</Typography>
-                <Typography variant="h4" sx={{ mt: 1 }}>
-                  1,254
-                </Typography>
-                <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
-                  +12.5% Since last month
-                </Typography>
-              </Box>
-            </Grid>
-
-            <Grid xs={12} sm={6} md={3}>
-              <Box
-                sx={{
-                  bgcolor: '#FEE2E2',
-                  p: 2,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="h6">Low Stock</Typography>
-                <Typography variant="h4" sx={{ mt: 1 }} color="error.main">
-                  23
-                </Typography>
-                <Typography variant="body2" color="error.main" sx={{ mt: 1 }}>
-                  -4.2% Since last week
-                </Typography>
-              </Box>
-            </Grid>
-
-            <Grid xs={12} sm={6} md={3}>
-              <Box
-                sx={{
-                  bgcolor: '#F3F4F6',
-                  p: 2,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="h6">Revenue</Typography>
-                <Typography variant="h4" sx={{ mt: 1 }}>
-                  Rp 45.6M
-                </Typography>
-                <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
-                  +8.2% Since last month
-                </Typography>
-              </Box>
-            </Grid>
-
-            <Grid xs={12} sm={6} md={3}>
-              <Box
-                sx={{
-                  bgcolor: '#F3F4F6',
-                  p: 2,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="h6">Top Sellers</Typography>
-                <Typography variant="h4" sx={{ mt: 1 }}>
-                  42
-                </Typography>
-                <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
-                  +3.7% Since last month
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-          <Grid container spacing={3} sx={{ mt: 1 }}>
-            <Grid xs={12} md={6}>
-              <Box
-                sx={{
-                  bgcolor: '#F3F4F6',
-                  p: 2,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="h6" gutterBottom>
-                  Inventory Overview
-                </Typography>
-                <Line data={dataLine} />
-              </Box>
-            </Grid>
-            <Grid xs={12} md={6}>
-              <Box
-                sx={{
-                  bgcolor: '#F3F4F6',
-                  p: 2,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                }}
-              >
-                <Typography variant="h6" gutterBottom>
-                  Category Distribution
-                </Typography>
-                <Pie data={dataPie} />
-              </Box>
-            </Grid>
-          </Grid>
+        {/* Summary Cards */}
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper sx={{ padding: 2, textAlign: 'center' }}>
+            <Typography variant="h6">Total Products</Typography>
+            <Typography variant="h4" color="primary" sx={{ mt: 1 }}>
+              150
+            </Typography>
+          </Paper>
         </Grid>
-        <Grid xs={12} md={4}>
-          <RecentProducts />
-          <Box sx={{ mt: 3 }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper sx={{ padding: 2, textAlign: 'center' }}>
+            <Typography variant="h6">Total Stock</Typography>
+            <Typography variant="h4" color="secondary" sx={{ mt: 1 }}>
+              1254
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper sx={{ padding: 2, textAlign: 'center' }}>
+            <Typography variant="h6">Low Stock Items</Typography>
+            <Typography variant="h4" color="error" sx={{ mt: 1 }}>
+              23
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper sx={{ padding: 2, textAlign: 'center' }}>
+            <Typography variant="h6">Total Sales (Month)</Typography>
+            <Typography variant="h4" color="success" sx={{ mt: 1 }}>
+              Rp 45.6M
+            </Typography>
+          </Paper>
+        </Grid>
+
+        {/* Charts */}
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ padding: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Inventory Overview
+            </Typography>
+            {/* Chart will be implemented here */}
+            <Line data={dataLine} />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ padding: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Category Distribution
+            </Typography>
+            {/* Chart will be implemented here */}
+            <Pie data={dataPie} />
+          </Paper>
+        </Grid>
+
+        {/* Recent Products and Low Stock Alerts */}
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ padding: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Recent Products
+            </Typography>
+            {/* Recent Products component will be here */}
+            <RecentProducts />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ padding: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Low Stock Alerts
+            </Typography>
+            {/* Low Stock Alert component will be here */}
             <LowStockAlert />
-          </Box>
+          </Paper>
         </Grid>
       </Grid>
     </Box>
