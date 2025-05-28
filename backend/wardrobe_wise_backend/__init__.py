@@ -10,11 +10,19 @@ from pyramid.view import view_config
 from . import cors_middleware
 from .views import auth  # pastikan view login/logout terdaftar
 import logging
+from pyramid.security import Allow, Authenticated
+
+class RootFactory:
+    __acl__ = [
+        (Allow, Authenticated, 'authenticated'),
+    ]
+    def __init__(self, request):
+        pass
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """ 
-    config = Configurator(settings=settings)
+    config = Configurator(settings=settings, root_factory=RootFactory)
 
     # Configure SQLAlchemy
     engine = engine_from_config(settings, 'sqlalchemy.')
