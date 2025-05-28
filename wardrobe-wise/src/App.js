@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 import Sidebar from './components/Sidebar';
 import ProductManagement from './pages/ProductManagement';
 import SalesReports from './pages/SalesReports';
 import StockMonitoring from './pages/StockMonitoring';
-import { Box } from '@mui/material';
+import LoginPage from './pages/LoginPage';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  if (!isLoggedIn) {
+    return <LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />;
+  }
+
   return (
     <Box sx={{ display: 'flex' }}>
       <Sidebar />

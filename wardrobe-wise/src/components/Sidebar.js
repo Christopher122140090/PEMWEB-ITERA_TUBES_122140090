@@ -3,14 +3,12 @@ import { Box, List, ListItem, ListItemIcon, ListItemText, Typography, Divider } 
 import CategoryIcon from '@mui/icons-material/Category';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import SettingsIcon from '@mui/icons-material/Settings';
 import { Link, useLocation } from 'react-router-dom';
 
 const menuItems = [
   { text: 'Product Management', icon: <CategoryIcon />, path: '/product-management' },
   { text: 'Sales Reports', icon: <ShoppingCartIcon />, path: '/sales-reports' },
   { text: 'Stock Monitoring', icon: <InventoryIcon />, path: '/stock-monitoring' },
-  { text: 'Barcode Scanner', icon: <SettingsIcon />, path: '/barcode-scanner' },
 ];
 
 const Sidebar = () => {

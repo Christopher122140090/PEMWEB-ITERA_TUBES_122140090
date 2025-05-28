@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"isBackground": true,
+			"label": "Run Pyramid Backend",
+			"type": "shell",
+			"command": "pserve development.ini",
+			"problemMatcher": []
+		}
+	]
+}

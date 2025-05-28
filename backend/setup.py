@@ -1,3 +1,4 @@
+\
 import os
 
 from setuptools import setup, find_packages
@@ -10,15 +11,19 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 
 requires = [
     'pyramid',
-    'pyramid_chameleon',
+    'pyramid_chameleon', # Or another templating engine if needed, but let's start simple
     'pyramid_debugtoolbar',
     'waitress',
+    'cornice', # cornice is good for building REST APIs with Pyramid
+    'SQLAlchemy', # Add SQLAlchemy for database interaction
+    'psycopg2-binary', # Add PostgreSQL driver
+    'passlib', # Add passlib for password hashing
 ]
 
 setup(name='wardrobe_wise_backend',
       version='0.0',
       description='wardrobe_wise_backend',
-      long_description=README + '\n\n' + CHANGES,
+      long_description=README + '\\n\\n' + CHANGES,
       classifiers=[
           "Programming Language :: Python",
           "Framework :: Pyramid",

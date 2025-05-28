@@ -1,17 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, Alert } from '@mui/material';
+import { getProducts, createProduct, updateProduct, deleteProduct } from '../services/api';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentProduct, setCurrentProduct] = useState({ id: null, name: '', price: '', stock: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Dummy data for now
+  const fetchProducts = () => {
+    setLoading(true);
+    getProducts()
+      .then(response => {
+        setProducts(response.data);
+        setError(null);
+      })
+      .catch(() => {
+        setError('Gagal memuat data produk');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    setProducts([
-      { id: 1, name: 'Product A', price: '10000', stock: '50' },
-      { id: 2, name: 'Product B', price: '15000', stock: '30' },
-    ]);
+    fetchProducts();
   }, []);
 
   const handleOpenDialog = (product = { id: null, name: '', price: '', stock: '' }) => {
@@ -25,14 +39,35 @@ const ProductManagement = () => {
   };
 
   const handleSaveProduct = () => {
-    // Logic to save product (add or update)
-    console.log('Saving product:', currentProduct);
-    handleCloseDialog();
+    setLoading(true);
+    const apiCall = currentProduct.id ? updateProduct(currentProduct.id, currentProduct) : createProduct(currentProduct);
+    apiCall
+      .then(() => {
+        fetchProducts();
+        setError(null);
+        handleCloseDialog();
+      })
+      .catch(() => {
+        setError('Gagal menyimpan produk');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleDeleteProduct = (id) => {
-    // Logic to delete product
-    console.log('Deleting product with id:', id);
+    setLoading(true);
+    deleteProduct(id)
+      .then(() => {
+        fetchProducts();
+        setError(null);
+      })
+      .catch(() => {
+        setError('Gagal menghapus produk');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -40,6 +75,8 @@ const ProductManagement = () => {
       <Typography variant="h4" gutterBottom>
         Product Management
       </Typography>
+      {loading && <CircularProgress />}
+      {error && <Alert severity="error">{error}</Alert>}
       <Button variant="contained" onClick={() => handleOpenDialog()} sx={{ mb: 2 }}>
         Add Product
       </Button>

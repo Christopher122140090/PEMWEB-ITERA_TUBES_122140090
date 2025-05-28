@@ -1,0 +1,69 @@
+Metadata-Version: 2.4
+Name: wardrobe_wise_backend
+Version: 0.0
+Summary: wardrobe_wise_backend
+Home-page: 
+Author: 
+Author-email: 
+Keywords: web pyramid pylons
+Classifier: Programming Language :: Python
+Classifier: Framework :: Pyramid
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: WSGI :: Application
+Requires-Dist: pyramid
+Requires-Dist: pyramid_chameleon
+Requires-Dist: pyramid_debugtoolbar
+Requires-Dist: waitress
+Requires-Dist: cornice
+Requires-Dist: SQLAlchemy
+Requires-Dist: psycopg2-binary
+Requires-Dist: passlib
+Dynamic: classifier
+Dynamic: description
+Dynamic: keywords
+Dynamic: requires-dist
+Dynamic: summary
+
+# WardrobeWise Backend (Pyramid)
+
+This is the backend for the WardrobeWise application, built with Python Pyramid and implementing RESTful API endpoints for product management.
+
+## Setup
+
+1.  Navigate to the `backend` directory.
+2.  Install dependencies:
+    ```bash
+    pip install -e .
+    ```
+
+## Running the Application
+
+To run the application, use the following command:
+
+```bash
+pserve development.ini
+```
+
+## API Endpoints
+
+The API provides the following endpoints:
+
+*   `/products` (GET, POST)
+*   `/products/{id}` (GET, PUT, DELETE)
+*   `/login` (POST)
+
+Authentication is required for product endpoints. Use the `/login` endpoint with username 'admin' and password 'secret' to obtain a token.
+
+## Testing
+
+To run unit tests and check coverage:
+
+1.  Install testing dependencies:
+    ```bash
+    pip install pytest pytest-cov
+    ```
+2.  Run tests with coverage:
+    ```bash
+    pytest --cov=wardrobe_wise_backend tests/
+    ```
+\n\n
