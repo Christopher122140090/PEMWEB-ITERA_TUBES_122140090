@@ -35,9 +35,9 @@ def health_check(request):
 def home_view(request):
     return {'message': 'Welcome to the Wardrobe Wise Backend API'}
 
+# Endpoint Pyramid untuk tambah produk
 @products_service.post(permission='authenticated')
 def create_product(request):
-    """Creates a new product in the database."""
     data = request.json_body
     new_product = Product(
         name=data.get('name'),
@@ -45,21 +45,13 @@ def create_product(request):
         stock=data.get('stock'),
     )
     DBSession.add(new_product)
-    DBSession.flush() # Get the new product ID
+    DBSession.flush()
     request.response.status = 201
     return new_product.to_dict()
 
-# Remove Cornice decorators from parameterized routes
-def get_product(request):
-    """Returns a single product by ID from the database."""
-    product_id = int(request.matchdict['id'])
-    product = DBSession.query(Product).filter(Product.id == product_id).first()
-    if product:
-        return product.to_dict()
-    raise HTTPNotFound()
-
-def update_product(request):
-    """Updates an existing product in the database."""
+# Endpoint Pyramid untuk edit produk
+@view_config(route_name='update_product', renderer='json', request_method='PUT', permission='authenticated')
+def update_product_pyramid(request):
     product_id = int(request.matchdict['id'])
     data = request.json_body
     product = DBSession.query(Product).filter(Product.id == product_id).first()
@@ -69,17 +61,21 @@ def update_product(request):
         product.stock = data.get('stock', product.stock)
         DBSession.flush()
         return product.to_dict()
-    raise HTTPNotFound()
+    request.response.status = 404
+    return {'message': 'Product not found'}
 
-def delete_product(request):
-    """Deletes a product by ID from the database."""
+# Endpoint Pyramid untuk hapus produk
+@view_config(route_name='delete_product', renderer='json', request_method='DELETE', permission='authenticated')
+def delete_product_pyramid(request):
     product_id = int(request.matchdict['id'])
     product = DBSession.query(Product).filter(Product.id == product_id).first()
     if product:
         DBSession.delete(product)
         DBSession.flush()
-        raise HTTPNoContent()
-    raise HTTPNotFound()
+        request.response.status = 204
+        return None
+    request.response.status = 404
+    return {'message': 'Product not found'}
 
 @users_service.get()
 def get_users(request):

@@ -68,7 +68,7 @@ def main(global_config, **settings):
 
     config.add_subscriber(log_request_errors, 'pyramid.events.NewRequest')
 
-    # Pastikan Cornice service terdaftar
+    # Pastikan Cornice service terdaftar sebelum scan views
     config.include('cornice')
 
     # Add route for root URL to avoid 404
@@ -83,12 +83,11 @@ def main(global_config, **settings):
     # Add Cornice services for /products and /inventory
     from .views import api as api_views
     # Register parameterized product routes
-    config.add_route('get_product', '/products/{id}')
-    config.add_view(api_views.get_product, route_name='get_product', renderer='json', request_method='GET', permission='authenticated')
+    # config.add_route('get_product', '/products/{id}')
+    # config.add_view(api_views.get_product, route_name='get_product', renderer='json', request_method='GET', permission='authenticated')
     config.add_route('update_product', '/products/{id}')
-    config.add_view(api_views.update_product, route_name='update_product', renderer='json', request_method='PUT', permission='authenticated')
     config.add_route('delete_product', '/products/{id}')
-    config.add_view(api_views.delete_product, route_name='delete_product', renderer='json', request_method='DELETE', permission='authenticated')
+    # config.add_route('create_product', '/products')  # Komentari agar tidak bentrok dengan Cornice
     # Register parameterized user routes
     config.add_route('get_user', '/users/{id}')
     config.add_view(api_views.get_user_by_id, route_name='get_user', renderer='json', request_method='GET', permission='authenticated')
@@ -96,7 +95,6 @@ def main(global_config, **settings):
     config.add_view(api_views.update_user, route_name='update_user', renderer='json', request_method='PUT', permission='authenticated')
     config.add_route('delete_user', '/users/{id}')
     config.add_view(api_views.delete_user, route_name='delete_user', renderer='json', request_method='DELETE', permission='authenticated')
-    # Scan views folder secara eksplisit agar semua endpoint (termasuk /login) terdaftar
     config.scan('wardrobe_wise_backend.views')
     return config.make_wsgi_app()
 
