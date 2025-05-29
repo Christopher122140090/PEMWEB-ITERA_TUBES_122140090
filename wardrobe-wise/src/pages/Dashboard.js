@@ -1,20 +1,57 @@
 // src/pages/Dashboard.js
-import React from 'react';
-import { Box, Grid, Typography, Paper } from '@mui/material';
-import { Line } from 'react-chartjs-2';
-import { Pie } from 'react-chartjs-2';
+import React, { useEffect, useState } from 'react';
+import { Box, Grid, Typography, Paper, CircularProgress, Alert } from '@mui/material';
+import { Line, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
-import RecentProducts from '../components/RecentProducts';
 import LowStockAlert from '../components/LowStockAlert';
+import { getProducts, getSales } from '../services/api';
 
 const Dashboard = () => {
-  // Data for Inventory Overview chart
+  const [products, setProducts] = useState([]);
+  const [sales, setSales] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([getProducts(), getSales()])
+      .then(([productsRes, salesRes]) => {
+        setProducts(productsRes.data);
+        setSales(salesRes.data);
+        setError(null);
+      })
+      .catch(() => setError('Gagal memuat data statistik'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Statistik
+  const totalProducts = products.length;
+  const totalStock = products.reduce((sum, p) => sum + Number(p.stock), 0);
+  const lowStockCount = products.filter(p => Number(p.stock) <= 5).length;
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+  const salesThisMonth = sales.filter(s => {
+    const d = new Date(s.date);
+    return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+  });
+  const totalSalesThisMonth = salesThisMonth.reduce((sum, s) => sum + (s.price * s.quantity), 0);
+
+  // Data chart penjualan per bulan (12 bulan terakhir)
+  const monthlySales = Array(12).fill(0);
+  sales.forEach(s => {
+    const d = new Date(s.date);
+    if (d.getFullYear() === thisYear) {
+      monthlySales[d.getMonth()] += s.price * s.quantity;
+    }
+  });
+  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const dataLine = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    labels: monthLabels,
     datasets: [
       {
-        label: 'Inventory Overview',
-        data: [1200, 1300, 1250, 1400, 1500, 1600, 1550, 1450, 1650, 1700, 1600, 1500],
+        label: 'Penjualan Bulanan',
+        data: monthlySales,
         borderColor: '#6A5CFF',
         backgroundColor: 'rgba(106, 92, 255, 0.2)',
         fill: true,
@@ -23,13 +60,23 @@ const Dashboard = () => {
     ],
   };
 
-  // Data for Category Distribution chart
+  // Pie chart: kategori berdasarkan bulan (jumlah transaksi per bulan)
+  const salesCountPerMonth = Array(12).fill(0);
+  sales.forEach(s => {
+    const d = new Date(s.date);
+    if (d.getFullYear() === thisYear) {
+      salesCountPerMonth[d.getMonth()] += 1;
+    }
+  });
   const dataPie = {
-    labels: ['T-Shirts', 'Jeans', 'Shirts', 'Dresses', 'Jackets'],
+    labels: monthLabels,
     datasets: [
       {
-        data: [400, 250, 150, 100, 50],
-        backgroundColor: ['#6A5CFF', '#3B82F6', '#10B981', '#FBBF24', '#EF4444'],
+        data: salesCountPerMonth,
+        backgroundColor: [
+          '#6A5CFF', '#3B82F6', '#10B981', '#FBBF24', '#EF4444',
+          '#A78BFA', '#F472B6', '#F59E42', '#34D399', '#60A5FA', '#F87171', '#6366F1'
+        ],
         hoverOffset: 30,
       },
     ],
@@ -40,14 +87,16 @@ const Dashboard = () => {
       <Typography variant="h4" gutterBottom>
         Dashboard
       </Typography>
-
+      {loading && <CircularProgress />}
+      {error && <Alert severity="error">{error}</Alert>}
+      {!loading && !error && (
       <Grid container spacing={3}>
         {/* Summary Cards */}
         <Grid item xs={12} sm={6} md={3}>
           <Paper sx={{ padding: 2, textAlign: 'center' }}>
             <Typography variant="h6">Total Products</Typography>
             <Typography variant="h4" color="primary" sx={{ mt: 1 }}>
-              150
+              {totalProducts}
             </Typography>
           </Paper>
         </Grid>
@@ -55,7 +104,7 @@ const Dashboard = () => {
           <Paper sx={{ padding: 2, textAlign: 'center' }}>
             <Typography variant="h6">Total Stock</Typography>
             <Typography variant="h4" color="secondary" sx={{ mt: 1 }}>
-              1254
+              {totalStock}
             </Typography>
           </Paper>
         </Grid>
@@ -63,7 +112,7 @@ const Dashboard = () => {
           <Paper sx={{ padding: 2, textAlign: 'center' }}>
             <Typography variant="h6">Low Stock Items</Typography>
             <Typography variant="h4" color="error" sx={{ mt: 1 }}>
-              23
+              {lowStockCount}
             </Typography>
           </Paper>
         </Grid>
@@ -71,7 +120,7 @@ const Dashboard = () => {
           <Paper sx={{ padding: 2, textAlign: 'center' }}>
             <Typography variant="h6">Total Sales (Month)</Typography>
             <Typography variant="h4" color="success" sx={{ mt: 1 }}>
-              Rp 45.6M
+              Rp {totalSalesThisMonth.toLocaleString()}
             </Typography>
           </Paper>
         </Grid>
@@ -80,42 +129,31 @@ const Dashboard = () => {
         <Grid item xs={12} md={6}>
           <Paper sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
-              Inventory Overview
+              Penjualan Bulanan
             </Typography>
-            {/* Chart will be implemented here */}
             <Line data={dataLine} />
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
-              Category Distribution
+              Jumlah Transaksi per Bulan
             </Typography>
-            {/* Chart will be implemented here */}
             <Pie data={dataPie} />
           </Paper>
         </Grid>
 
-        {/* Recent Products and Low Stock Alerts */}
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Recent Products
-            </Typography>
-            {/* Recent Products component will be here */}
-            <RecentProducts />
-          </Paper>
-        </Grid>
+        {/* Low Stock Alerts */}
         <Grid item xs={12} md={6}>
           <Paper sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
               Low Stock Alerts
             </Typography>
-            {/* Low Stock Alert component will be here */}
             <LowStockAlert />
           </Paper>
         </Grid>
       </Grid>
+      )}
     </Box>
   );
 };

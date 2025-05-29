@@ -1,15 +1,17 @@
 from cornice import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPNoContent
-from ..models import DBSession, Product, User, InventoryItem # Import DBSession, Product, User, InventoryItem model
+from ..models import DBSession, Product, User, InventoryItem, Sale # Import DBSession, Product, User, InventoryItem, Sale model
 from passlib.hash import pbkdf2_sha256
 from pyramid.response import Response
 from pyramid.view import view_config
 import logging
+from datetime import datetime
 
 products_list_service = Service('products_list', '/products_list')
 users_service = Service('users', '/users', permission='authenticated') # Add permission
 health_service = Service('health', '/health')
 inventory_service = Service('inventory', '/inventory')
+sales_service = Service('sales', '/sales')
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ def create_product(request):
     new_product = Product(
         name=data.get('name'),
         price=data.get('price'),
-        stock=data.get('stock'),
+        stock=data.get('stock') if data.get('stock') is not None else 0,
     )
     DBSession.add(new_product)
     DBSession.flush()
@@ -39,9 +41,9 @@ def create_product(request):
 
 @inventory_service.get(permission='authenticated')
 def get_inventory(request):
-    """Returns a list of all inventory items from the database."""
-    inventory_items = DBSession.query(InventoryItem).all()
-    return [item.to_dict() for item in inventory_items]
+    """Returns a list of all products (as inventory) from the database."""
+    products = DBSession.query(Product).all()
+    return [product.to_dict() for product in products]
 
 @health_service.get()
 def health_check(request):
@@ -194,3 +196,35 @@ def get_product_pyramid(request):
         return product.to_dict()
     request.response.status = 404
     return {'message': 'Product not found'}
+
+@sales_service.post(permission='authenticated')
+def create_sale(request):
+    data = request.json_body
+    product_id = data.get('product_id')
+    quantity = int(data.get('quantity', 1))
+    price = int(data.get('price', 0))
+    if not product_id or quantity < 1 or price < 0:
+        request.response.status = 400
+        return {'message': 'Invalid product_id, quantity, or price'}
+    product = DBSession.query(Product).filter(Product.id == product_id).first()
+    if not product or product.stock < quantity:
+        request.response.status = 400
+        return {'message': 'Product not found or not enough stock'}
+    # Kurangi stok
+    product.stock -= quantity
+    sale = Sale(product_id=product_id, quantity=quantity, price=price, date=datetime.utcnow())
+    try:
+        DBSession.add(sale)
+        DBSession.flush()
+        DBSession.commit()
+        return sale.to_dict()
+    except Exception as e:
+        DBSession.rollback()
+        request.response.status = 400
+        return {'message': f'Error creating sale: {e}'}
+
+@sales_service.get(permission='authenticated')
+def get_sales(request):
+    # Optional: filter by date range
+    sales = DBSession.query(Sale).order_by(Sale.date.desc()).all()
+    return [s.to_dict() for s in sales]

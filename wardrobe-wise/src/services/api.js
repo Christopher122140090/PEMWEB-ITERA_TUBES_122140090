@@ -26,3 +26,5 @@ export const login = (username, password) =>
   api.post('/login', { username, password });
 
 export const logout = () => api.post('/logout');
+export const createSale = (sale) => api.post('/sales', sale);
+export const getSales = () => api.get('/sales');

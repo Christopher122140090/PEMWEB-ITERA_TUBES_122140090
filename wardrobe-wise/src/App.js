@@ -6,6 +6,7 @@ import ProductManagement from './pages/ProductManagement';
 import SalesReports from './pages/SalesReports';
 import StockMonitoring from './pages/StockMonitoring';
 import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,10 +20,11 @@ function App() {
       <Sidebar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/product-management" element={<ProductManagement />} />
           <Route path="/sales-reports" element={<SalesReports />} />
           <Route path="/stock-monitoring" element={<StockMonitoring />} />
-          <Route path="*" element={<Navigate to="/product-management" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Box>
     </Box>

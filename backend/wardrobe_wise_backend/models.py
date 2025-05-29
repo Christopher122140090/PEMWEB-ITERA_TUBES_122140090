@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
+from sqlalchemy import Column, Integer, Text, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
+from datetime import datetime
 
 DBSession = scoped_session(sessionmaker())
 Base = declarative_base()
@@ -47,4 +48,21 @@ class InventoryItem(Base):
             'id': self.id,
             'product_id': self.product_id,
             'quantity': self.quantity,
+        }
+
+class Sale(Base):
+    __tablename__ = 'sales'
+    id = Column(Integer, primary_key=True)
+    product_id = Column(Integer, ForeignKey('products.id'), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    price = Column(Integer, nullable=False)
+    date = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'product_id': self.product_id,
+            'quantity': self.quantity,
+            'price': self.price,
+            'date': self.date.isoformat() if self.date else None,
         }
