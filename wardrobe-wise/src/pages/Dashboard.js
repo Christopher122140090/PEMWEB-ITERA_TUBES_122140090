@@ -45,7 +45,7 @@ const Dashboard = () => {
       monthlySales[d.getMonth()] += s.price * s.quantity;
     }
   });
-  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthLabels = ['Jainisalahn', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const dataLine = {
     labels: monthLabels,
     datasets: [
