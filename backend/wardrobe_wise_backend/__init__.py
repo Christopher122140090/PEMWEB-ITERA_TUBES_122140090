@@ -81,15 +81,13 @@ def main(global_config, **settings):
     config.add_view(auth_views.login_options, route_name='login', request_method='OPTIONS')
     config.add_view(auth_views.logout, route_name='logout')
     config.add_view(auth_views.logout_options, route_name='logout', request_method='OPTIONS')
-    # Add Cornice services for /products and /inventory
+    # Cornice service hanya untuk /products_list (GET/POST), manual untuk /products/{id}
     from .views import api as api_views
-    # Register parameterized product routes
-    config.add_route('get_product', '/products/{id}')
-    config.add_view(api_views.get_product_pyramid, route_name='get_product', renderer='json', request_method='GET', permission='authenticated')
-    config.add_route('update_product', '/products/{id}')
-    config.add_view(api_views.update_product_pyramid, route_name='update_product', renderer='json', request_method='PUT', permission='authenticated')
-    config.add_route('delete_product', '/products/{id}')
-    config.add_view(api_views.delete_product_pyramid, route_name='delete_product', renderer='json', request_method='DELETE', permission='authenticated')
+    # Register a single parameterized product route for all methods
+    config.add_route('product_detail', '/products/{id}')
+    config.add_view(api_views.get_product_pyramid, route_name='product_detail', renderer='json', request_method='GET', permission='authenticated')
+    config.add_view(api_views.update_product_pyramid, route_name='product_detail', renderer='json', request_method='PUT', permission='authenticated')
+    config.add_view(api_views.delete_product_pyramid, route_name='product_detail', renderer='json', request_method='DELETE', permission='authenticated')
     # config.add_route('create_product', '/products')  # Komentari agar tidak bentrok dengan Cornice
     # Register parameterized user routes
     config.add_route('get_user', '/users/{id}')

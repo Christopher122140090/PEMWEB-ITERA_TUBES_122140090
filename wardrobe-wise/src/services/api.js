@@ -18,8 +18,8 @@ api.interceptors.response.use(
 );
 
 export const getInventory = () => api.get('/inventory');
-export const getProducts = () => api.get('/products');
-export const createProduct = (product) => api.post('/products', product);
+export const getProducts = () => api.get('/products_list');
+export const createProduct = (product) => api.post('/products_list', product);
 export const updateProduct = (id, product) => api.put('/products/' + id, product);
 export const deleteProduct = (id) => api.delete('/products/' + id);
 export const login = (username, password) =>

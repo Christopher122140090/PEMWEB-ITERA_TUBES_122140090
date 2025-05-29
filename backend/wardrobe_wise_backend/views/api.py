@@ -6,18 +6,36 @@ from pyramid.response import Response
 from pyramid.view import view_config
 import logging
 
-products_service = Service('products', '/products')
+products_list_service = Service('products_list', '/products_list')
 users_service = Service('users', '/users', permission='authenticated') # Add permission
 health_service = Service('health', '/health')
 inventory_service = Service('inventory', '/inventory')
 
 logger = logging.getLogger(__name__)
 
-@products_service.get(permission='authenticated')
+# HANYA GET dan POST yang boleh pakai Cornice!
+@products_list_service.get(permission='authenticated')
 def get_products(request):
     """Returns a list of all products from the database."""
     products = DBSession.query(Product).all()
     return [product.to_dict() for product in products]
+
+@products_list_service.post(permission='authenticated')
+def create_product(request):
+    data = request.json_body
+    new_product = Product(
+        name=data.get('name'),
+        price=data.get('price'),
+        stock=data.get('stock'),
+    )
+    DBSession.add(new_product)
+    DBSession.flush()
+    DBSession.commit()
+    request.response.status = 201
+    return new_product.to_dict()
+
+# JANGAN TAMBAHKAN @products_service.put ATAU @products_service.delete DI SINI!
+# Untuk /products/{id} (GET, PUT, DELETE) hanya boleh pakai route manual di __init__.py
 
 @inventory_service.get(permission='authenticated')
 def get_inventory(request):
@@ -38,22 +56,8 @@ def health_check(request):
 def home_view(request):
     return {'message': 'Welcome to the Wardrobe Wise Backend API'}
 
-# Endpoint Pyramid untuk tambah produk
-@products_service.post(permission='authenticated')
-def create_product(request):
-    data = request.json_body
-    new_product = Product(
-        name=data.get('name'),
-        price=data.get('price'),
-        stock=data.get('stock'),
-    )
-    DBSession.add(new_product)
-    DBSession.flush()
-    DBSession.commit()
-    request.response.status = 201
-    return new_product.to_dict()
-
 def update_product_pyramid(request):
+    logger.debug(f"update_product_pyramid dipanggil untuk id={request.matchdict.get('id')}")
     product_id = int(request.matchdict['id'])
     data = request.json_body
     product = DBSession.query(Product).filter(Product.id == product_id).first()
@@ -61,22 +65,37 @@ def update_product_pyramid(request):
         product.name = data.get('name', product.name)
         product.price = data.get('price', product.price)
         product.stock = data.get('stock', product.stock)
-        DBSession.flush()
-        DBSession.commit()
-        return product.to_dict()
+        try:
+            DBSession.flush()
+            DBSession.commit()
+            request.response.status = 200
+            return product.to_dict()
+        except Exception as e:
+            DBSession.rollback()
+            logger.error(f"Error updating product: {e}")
+            request.response.status = 400
+            return {'message': 'Error updating product'}
     logger.error(f"Product with id {product_id} not found for update.")
     request.response.status = 404
     return {'message': 'Product not found'}
 
+from pyramid.response import Response
+
 def delete_product_pyramid(request):
+    logger.debug(f"delete_product_pyramid dipanggil untuk id={request.matchdict.get('id')}")
     product_id = int(request.matchdict['id'])
     product = DBSession.query(Product).filter(Product.id == product_id).first()
     if product:
-        DBSession.delete(product)
-        DBSession.flush()
-        DBSession.commit()
-        request.response.status = 204
-        return None
+        try:
+            DBSession.delete(product)
+            DBSession.flush()
+            DBSession.commit()
+            return Response(status=204)
+        except Exception as e:
+            DBSession.rollback()
+            logger.error(f"Error deleting product: {e}")
+            request.response.status = 400
+            return {'message': 'Error deleting product'}
     logger.error(f"Product with id {product_id} not found for delete.")
     request.response.status = 404
     return {'message': 'Product not found'}
