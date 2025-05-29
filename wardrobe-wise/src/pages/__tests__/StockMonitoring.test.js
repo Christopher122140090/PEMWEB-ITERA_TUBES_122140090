@@ -1,15 +1,27 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, screen, waitFor } from '@testing-library/react';
 import StockMonitoring from '../StockMonitoring';
+import * as api from '../../services/api';
 
-test('renders low stock products list', async () => {
-  await act(async () => {
-    render(<StockMonitoring />);
+jest.mock('../../services/api');
+
+describe('StockMonitoring', () => {
+  beforeEach(() => {
+    api.getInventory.mockResolvedValue({
+      data: [
+        { id: 1, name: 'Product A', stock: 2 },
+        { id: 2, name: 'Product B', stock: 1 },
+      ],
+    });
   });
-  expect(screen.getByText(/Stock Monitoring/i)).toBeInTheDocument();
-  await waitFor(() => {
-    expect(screen.getByText('Product C')).toBeInTheDocument();
-    expect(screen.getByText('Product D')).toBeInTheDocument();
+
+  test('renders low stock products list', async () => {
+    render(<StockMonitoring />);
+    expect(screen.getByText(/Stock Monitoring/i)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByText('Product A')).toBeInTheDocument();
+      expect(screen.getByText('Product B')).toBeInTheDocument();
+    });
   });
 });

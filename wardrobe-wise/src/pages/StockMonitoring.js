@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Alert } from '@mui/material';
-import { getInventory } from '../services/api';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Alert } from '@mui/material';
+import * as api from '../services/api';
 
 const StockMonitoring = () => {
   const [lowStockProducts, setLowStockProducts] = useState([]);
@@ -9,12 +9,12 @@ const StockMonitoring = () => {
 
   useEffect(() => {
     setLoading(true);
-    getInventory()
+    api.getInventory()
       .then(response => {
         setLowStockProducts(response.data);
         setError(null);
       })
-      .catch(err => {
+      .catch(() => {
         setError('Gagal memuat data stok');
       })
       .finally(() => {
@@ -27,29 +27,26 @@ const StockMonitoring = () => {
       <Typography variant="h4" gutterBottom>
         Stock Monitoring
       </Typography>
-      {loading && <CircularProgress />}
+      {loading && <Typography>Loading...</Typography>}
       {error && <Alert severity="error">{error}</Alert>}
-      <Paper sx={{ padding: 2 }}>
-        <Typography variant="h6" gutterBottom>Low Stock Products</Typography>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Current Stock</TableCell>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Current Stock</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {lowStockProducts.map((product) => (
+              <TableRow key={product.id}>
+                <TableCell>{product.name}</TableCell>
+                <TableCell>{product.stock}</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {lowStockProducts.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.stock}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 };

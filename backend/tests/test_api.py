@@ -37,6 +37,69 @@ class ProductApiTests(unittest.TestCase):
             {'id': 2, 'name': 'Product B', 'price': 15000, 'stock': 30},
         ])
 
+    def test_create_product(self):
+        from wardrobe_wise_backend.views.api import create_product
+        request = testing.DummyRequest(json_body={
+            'name': 'Product C',
+            'price': 12000,
+            'stock': 20
+        })
+        request.method = 'POST'
+        response = create_product(request)
+        self.assertEqual(request.response.status_code, 201)
+        self.assertEqual(response['name'], 'Product C')
+        self.assertEqual(response['price'], 12000)
+        self.assertEqual(response['stock'], 20)
+
+    def test_update_product(self):
+        from wardrobe_wise_backend.views.api import update_product_pyramid
+        product = Product(name='Product D', price=15000, stock=10)
+        self.session.add(product)
+        self.session.commit()
+
+        request = testing.DummyRequest(matchdict={'id': str(product.id)}, json_body={
+            'name': 'Product D Updated',
+            'price': 16000,
+            'stock': 15
+        })
+        request.method = 'PUT'
+        response = update_product_pyramid(request)
+        self.assertEqual(response['name'], 'Product D Updated')
+        self.assertEqual(response['price'], 16000)
+        self.assertEqual(response['stock'], 15)
+
+    def test_update_product_not_found(self):
+        from wardrobe_wise_backend.views.api import update_product_pyramid
+        request = testing.DummyRequest(matchdict={'id': '9999'}, json_body={
+            'name': 'Nonexistent Product',
+            'price': 10000,
+            'stock': 5
+        })
+        request.method = 'PUT'
+        response = update_product_pyramid(request)
+        self.assertEqual(request.response.status_code, 404)
+        self.assertEqual(response['message'], 'Product not found')
+
+    def test_delete_product(self):
+        from wardrobe_wise_backend.views.api import delete_product_pyramid
+        product = Product(name='Product E', price=18000, stock=8)
+        self.session.add(product)
+        self.session.commit()
+
+        request = testing.DummyRequest(matchdict={'id': str(product.id)})
+        request.method = 'DELETE'
+        response = delete_product_pyramid(request)
+        self.assertIsNone(response)
+        self.assertEqual(request.response.status_code, 204)
+
+    def test_delete_product_not_found(self):
+        from wardrobe_wise_backend.views.api import delete_product_pyramid
+        request = testing.DummyRequest(matchdict={'id': '9999'})
+        request.method = 'DELETE'
+        response = delete_product_pyramid(request)
+        self.assertEqual(request.response.status_code, 404)
+        self.assertEqual(response['message'], 'Product not found')
+
     # Add more tests for create, get_product, update, and delete
     # Remember to consider authentication in your tests
 

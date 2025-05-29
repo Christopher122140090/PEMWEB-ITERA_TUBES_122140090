@@ -83,10 +83,12 @@ def main(global_config, **settings):
     # Add Cornice services for /products and /inventory
     from .views import api as api_views
     # Register parameterized product routes
-    # config.add_route('get_product', '/products/{id}')
-    # config.add_view(api_views.get_product, route_name='get_product', renderer='json', request_method='GET', permission='authenticated')
+    config.add_route('get_product', '/products/{id}')
+    config.add_view(api_views.get_product_pyramid, route_name='get_product', renderer='json', request_method='GET', permission='authenticated')
     config.add_route('update_product', '/products/{id}')
+    config.add_view(api_views.update_product_pyramid, route_name='update_product', renderer='json', request_method='PUT', permission='authenticated')
     config.add_route('delete_product', '/products/{id}')
+    config.add_view(api_views.delete_product_pyramid, route_name='delete_product', renderer='json', request_method='DELETE', permission='authenticated')
     # config.add_route('create_product', '/products')  # Komentari agar tidak bentrok dengan Cornice
     # Register parameterized user routes
     config.add_route('get_user', '/users/{id}')

@@ -4,11 +4,14 @@ from ..models import DBSession, Product, User, InventoryItem # Import DBSession,
 from passlib.hash import pbkdf2_sha256
 from pyramid.response import Response
 from pyramid.view import view_config
+import logging
 
 products_service = Service('products', '/products')
 users_service = Service('users', '/users', permission='authenticated') # Add permission
 health_service = Service('health', '/health')
 inventory_service = Service('inventory', '/inventory')
+
+logger = logging.getLogger(__name__)
 
 @products_service.get(permission='authenticated')
 def get_products(request):
@@ -49,8 +52,7 @@ def create_product(request):
     request.response.status = 201
     return new_product.to_dict()
 
-# Endpoint Pyramid untuk edit produk
-@view_config(route_name='update_product', renderer='json', request_method='PUT', permission='authenticated')
+@products_service.put(permission='authenticated')
 def update_product_pyramid(request):
     product_id = int(request.matchdict['id'])
     data = request.json_body
@@ -61,11 +63,11 @@ def update_product_pyramid(request):
         product.stock = data.get('stock', product.stock)
         DBSession.flush()
         return product.to_dict()
+    logger.error(f"Product with id {product_id} not found for update.")
     request.response.status = 404
     return {'message': 'Product not found'}
 
-# Endpoint Pyramid untuk hapus produk
-@view_config(route_name='delete_product', renderer='json', request_method='DELETE', permission='authenticated')
+@products_service.delete(permission='authenticated')
 def delete_product_pyramid(request):
     product_id = int(request.matchdict['id'])
     product = DBSession.query(Product).filter(Product.id == product_id).first()
@@ -74,6 +76,7 @@ def delete_product_pyramid(request):
         DBSession.flush()
         request.response.status = 204
         return None
+    logger.error(f"Product with id {product_id} not found for delete.")
     request.response.status = 404
     return {'message': 'Product not found'}
 
@@ -163,3 +166,11 @@ def delete_user(request):
         DBSession.rollback()
         request.response.status = 400
         return {'message': f'Error deleting user: {e}'}
+
+def get_product_pyramid(request):
+    product_id = int(request.matchdict['id'])
+    product = DBSession.query(Product).filter(Product.id == product_id).first()
+    if product:
+        return product.to_dict()
+    request.response.status = 404
+    return {'message': 'Product not found'}
