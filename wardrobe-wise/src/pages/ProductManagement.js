@@ -13,6 +13,7 @@ const ProductManagement = () => {
     setLoading(true);
     getProducts()
       .then(response => {
+        console.log('fetchProducts response:', response);
         setProducts(response.data);
         setError(null);
       })
@@ -42,7 +43,8 @@ const ProductManagement = () => {
     setLoading(true);
     const apiCall = currentProduct.id ? updateProduct(currentProduct.id, currentProduct) : createProduct(currentProduct);
     apiCall
-      .then(() => {
+      .then(response => {
+        console.log('handleSaveProduct response:', response);
         fetchProducts();
         setError(null);
         handleCloseDialog();
@@ -58,7 +60,8 @@ const ProductManagement = () => {
   const handleDeleteProduct = (id) => {
     setLoading(true);
     deleteProduct(id)
-      .then(() => {
+      .then(response => {
+        console.log('handleDeleteProduct response:', response);
         fetchProducts();
         setError(null);
       })

@@ -49,10 +49,10 @@ def create_product(request):
     )
     DBSession.add(new_product)
     DBSession.flush()
+    DBSession.commit()
     request.response.status = 201
     return new_product.to_dict()
 
-@products_service.put(permission='authenticated')
 def update_product_pyramid(request):
     product_id = int(request.matchdict['id'])
     data = request.json_body
@@ -62,18 +62,19 @@ def update_product_pyramid(request):
         product.price = data.get('price', product.price)
         product.stock = data.get('stock', product.stock)
         DBSession.flush()
+        DBSession.commit()
         return product.to_dict()
     logger.error(f"Product with id {product_id} not found for update.")
     request.response.status = 404
     return {'message': 'Product not found'}
 
-@products_service.delete(permission='authenticated')
 def delete_product_pyramid(request):
     product_id = int(request.matchdict['id'])
     product = DBSession.query(Product).filter(Product.id == product_id).first()
     if product:
         DBSession.delete(product)
         DBSession.flush()
+        DBSession.commit()
         request.response.status = 204
         return None
     logger.error(f"Product with id {product_id} not found for delete.")

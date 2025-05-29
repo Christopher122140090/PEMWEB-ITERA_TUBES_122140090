@@ -68,6 +68,7 @@ def main(global_config, **settings):
 
     config.add_subscriber(log_request_errors, 'pyramid.events.NewRequest')
 
+
     # Pastikan Cornice service terdaftar sebelum scan views
     config.include('cornice')
 

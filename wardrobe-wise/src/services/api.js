@@ -5,6 +5,18 @@ const api = axios.create({
   withCredentials: true, // Add this line to include cookies
 });
 
+// Add response interceptor to handle 401 Unauthorized globally
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      // Handle unauthorized error: e.g., redirect to login or clear auth state
+      window.location.href = '/'; // Redirect to login page
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const getInventory = () => api.get('/inventory');
 export const getProducts = () => api.get('/products');
 export const createProduct = (product) => api.post('/products', product);
