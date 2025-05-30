@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, Alert } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../services/api';
 
 const ProductManagement = () => {
@@ -128,7 +129,7 @@ const ProductManagement = () => {
   );
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box style={{ padding: 24 }}>
       <Typography variant="h4" gutterBottom>
         Product Management
       </Typography>
@@ -138,11 +139,11 @@ const ProductManagement = () => {
         label="Cari Produk"
         variant="outlined"
         size="small"
-        sx={{ mb: 2, mr: 2 }}
+        style={{ marginBottom: 16, marginRight: 16 }}
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
-      <Button variant="contained" onClick={() => handleOpenDialog()} sx={{ mb: 2 }}>
+      <Button variant="contained" onClick={() => handleOpenDialog()} style={{ marginBottom: 16 }}>
         Add Product
       </Button>
       <TableContainer component={Paper}>
@@ -166,9 +167,9 @@ const ProductManagement = () => {
                 <TableCell>{product.price}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell align="right">
-                  <Button variant="outlined" size="small" onClick={() => handleOpenDialog(product)} sx={{ mr: 1 }}>Edit</Button>
-                  <Button variant="outlined" color="success" size="small" sx={{ mr: 1 }} onClick={() => setAddStockDialog({ open: true, product, value: '' })}>Tambah Stok</Button>
-                  <Button variant="outlined" color="error" size="small" onClick={() => handleDeleteProduct(product.id)}>Delete</Button>
+                  <Button variant="outlined" size="small" onClick={() => handleOpenDialog(product)} style={{ marginRight: 8 }}>Edit</Button>
+                  <Button variant="outlined" color="primary" size="small" style={{ marginRight: 8 }} onClick={() => setAddStockDialog({ open: true, product, value: '' })}>Tambah Stok</Button>
+                  <Button variant="outlined" color="secondary" size="small" onClick={() => handleDeleteProduct(product.id)}>Delete</Button>
                 </TableCell>
               </TableRow>
             ))}

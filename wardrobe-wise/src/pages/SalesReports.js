@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Paper, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Alert } from '@mui/material';
+import { Box, Typography, Paper, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import { getSales, getProducts } from '../services/api';
 
 const SalesReports = () => {
@@ -31,7 +32,7 @@ const SalesReports = () => {
   const totalTransactions = sales.length;
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box style={{ padding: 24 }}>
       <Typography variant="h4" gutterBottom>
         Sales Reports
       </Typography>
@@ -39,20 +40,20 @@ const SalesReports = () => {
       {error && <Alert severity="error">{error}</Alert>}
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ padding: 2 }}>
+          <Paper style={{ padding: 16 }}>
             <Typography variant="h6" gutterBottom>Summary</Typography>
             <Typography>Total Sales: Rp {totalSales.toLocaleString()}</Typography>
             <Typography>Number of Transactions: {totalTransactions}</Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ padding: 2 }}>
+          <Paper style={{ padding: 16 }}>
             <Typography variant="h6" gutterBottom>Sales Over Time</Typography>
             <Typography>Chart will be implemented here.</Typography>
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <Paper sx={{ padding: 2 }}>
+          <Paper style={{ padding: 16 }}>
             <Typography variant="h6" gutterBottom>Detailed Transactions</Typography>
             <TableContainer>
               <Table>

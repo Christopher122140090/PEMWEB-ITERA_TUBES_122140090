@@ -1,8 +1,31 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Alert, Paper } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
+import { makeStyles } from '@material-ui/core/styles';
 import { login } from '../services/api';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+    backgroundColor: '#f8f9fa',
+  },
+  paper: {
+    padding: theme.spacing(4),
+    minWidth: 320,
+  },
+  alert: {
+    marginTop: theme.spacing(2),
+  },
+  button: {
+    marginTop: theme.spacing(2),
+  },
+}));
+
 const LoginPage = ({ onLoginSuccess }) => {
+  const classes = useStyles();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -24,9 +47,9 @@ const LoginPage = ({ onLoginSuccess }) => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f8f9fa">
-      <Paper sx={{ p: 4, minWidth: 320 }}>
-        <Typography variant="h5" mb={2}>Login</Typography>
+    <Box className={classes.root}>
+      <Paper className={classes.paper}>
+        <Typography variant="h5" gutterBottom>Login</Typography>
         <form onSubmit={handleSubmit}>
           <TextField
             label="Username"
@@ -44,13 +67,13 @@ const LoginPage = ({ onLoginSuccess }) => {
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
-          {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+          {error && <Alert severity="error" className={classes.alert}>{error}</Alert>}
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            sx={{ mt: 2 }}
+            className={classes.button}
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}

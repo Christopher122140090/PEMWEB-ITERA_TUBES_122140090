@@ -1,6 +1,10 @@
 README.txt
 setup.py
 tests/test_api.py
+tests/test_critical_api.py
+tests/test_integration_api.py
+tests/test_performance_api.py
+tests/test_thorough_api.py
 wardrobe_wise_backend/__init__.py
 wardrobe_wise_backend/cors_middleware.py
 wardrobe_wise_backend/models.py
@@ -8,6 +12,5 @@ wardrobe_wise_backend.egg-info/PKG-INFO
 wardrobe_wise_backend.egg-info/SOURCES.txt
 wardrobe_wise_backend.egg-info/dependency_links.txt
 wardrobe_wise_backend.egg-info/entry_points.txt
-wardrobe_wise_backend.egg-info/not-zip-safe
 wardrobe_wise_backend.egg-info/requires.txt
 wardrobe_wise_backend.egg-info/top_level.txt

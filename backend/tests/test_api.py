@@ -1,7 +1,7 @@
 import unittest
 from pyramid import testing
-from ..wardrobe_wise_backend.views import api
-from ..wardrobe_wise_backend.models import Product, User, DBSession
+from wardrobe_wise_backend.views import api
+from wardrobe_wise_backend.models import Product, User, DBSession
 from pyramid.testing import DummyRequest
 
 class TestProductAPI(unittest.TestCase):

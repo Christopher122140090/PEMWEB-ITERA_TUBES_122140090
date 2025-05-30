@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, Paper, CircularProgress, Alert } from '@mui/material';
+import { Box, Typography, Button, Paper, CircularProgress } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import { getProducts } from '../services/api';
 
 const LowStockAlert = () => {
@@ -20,10 +21,10 @@ const LowStockAlert = () => {
   }, []);
 
   return (
-    <Paper sx={{ padding: 2 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+    <Paper style={{ padding: 16 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" style={{ marginBottom: 16 }}>
         <Typography variant="h6">Low Stock Alert</Typography>
-        <Typography variant="body2" color="primary" sx={{ cursor: 'pointer' }}>
+        <Typography variant="body2" color="primary" style={{ cursor: 'pointer' }}>
           View All
         </Typography>
       </Box>
@@ -35,23 +36,23 @@ const LowStockAlert = () => {
       {lowStockItems.map(({ id, name, stock }) => (
         <Box
           key={id}
-          sx={{
+          style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            bgcolor: '#ffeaea',
-            borderRadius: 1,
-            p: 1,
-            mb: 1,
+            backgroundColor: '#ffeaea',
+            borderRadius: 4,
+            padding: 8,
+            marginBottom: 8,
           }}
         >
           <Box>
-            <Typography fontWeight="bold">{name}</Typography>
+            <Typography style={{ fontWeight: 'bold' }}>{name}</Typography>
             <Typography variant="body2" color="textSecondary">
               Only {stock} items left
             </Typography>
           </Box>
-          <Button variant="contained" color="error" size="small">
+          <Button variant="contained" color="secondary" size="small">
             Restock
           </Button>
         </Box>

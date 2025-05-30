@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { Box } from '@material-ui/core';
 import Sidebar from './components/Sidebar';
 import ProductManagement from './pages/ProductManagement';
 import SalesReports from './pages/SalesReports';
@@ -16,16 +16,16 @@ function App() {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box style={{ display: 'flex' }}>
       <Sidebar />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/product-management" element={<ProductManagement />} />
-          <Route path="/sales-reports" element={<SalesReports />} />
-          <Route path="/stock-monitoring" element={<StockMonitoring />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
+      <Box component="main" style={{ flexGrow: 1, padding: 24 }}>
+        <Switch>
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/product-management" component={ProductManagement} />
+          <Route path="/sales-reports" component={SalesReports} />
+          <Route path="/stock-monitoring" component={StockMonitoring} />
+          <Redirect from="*" to="/dashboard" />
+        </Switch>
       </Box>
     </Box>
   );

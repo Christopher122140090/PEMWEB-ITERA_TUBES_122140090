@@ -4,6 +4,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
-    "react-router-dom": "^6.30.0"
+    "@remix-run/router": "^1.23.0",
+    "react-router-dom": "^5.3.4"
   }
 }

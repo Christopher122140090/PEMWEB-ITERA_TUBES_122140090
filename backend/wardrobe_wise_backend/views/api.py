@@ -45,11 +45,13 @@ def get_inventory(request):
     products = DBSession.query(Product).all()
     return [product.to_dict() for product in products]
 
+from sqlalchemy import text
+
 @health_service.get()
 def health_check(request):
     try:
         # Simple query to check DB connection
-        DBSession.execute('SELECT 1')
+        DBSession.execute(text('SELECT 1'))
         return Response('Database connection OK', status=200)
     except Exception as e:
         return Response(f'Database connection failed: {e}', status=500)
@@ -102,13 +104,13 @@ def delete_product_pyramid(request):
     request.response.status = 404
     return {'message': 'Product not found'}
 
-@users_service.get()
+@users_service.get(permission='authenticated')
 def get_users(request):
     # Query users from the database
     users = DBSession.query(User).all()
     return [user.to_dict() for user in users]
 
-@users_service.post()
+@users_service.post(permission='authenticated')
 def create_user(request):
     data = request.json_body
     username = data.get('username')

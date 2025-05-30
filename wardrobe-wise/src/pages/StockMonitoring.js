@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Alert, Button } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import * as api from '../services/api';
 
 const StockMonitoring = () => {
@@ -57,7 +58,7 @@ const StockMonitoring = () => {
   };
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box style={{ padding: 24 }}>
       <Typography variant="h4" gutterBottom>
         Stock Monitoring
       </Typography>

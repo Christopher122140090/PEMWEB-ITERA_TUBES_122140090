@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Link, Paper } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableCell, TableHead, TableRow, Link, Paper } from '@material-ui/core';
 
 const recentProducts = [
   { id: 'PRD-1234', name: 'Premium Cotton T-Shirt', category: 'T-Shirts', stock: 45, price: 'Rp 149,000', status: 'In Stock' },
@@ -15,10 +15,10 @@ const statusColors = {
 
 const RecentProducts = () => {
   return (
-    <Paper sx={{ padding: 2 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+    <Paper style={{ padding: 16 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" style={{ marginBottom: 16 }}>
         <Typography variant="h6">Recent Products</Typography>
-        <Link href="#" underline="none" color="primary" sx={{ cursor: 'pointer' }}>
+        <Link href="#" underline="none" color="primary" style={{ cursor: 'pointer' }}>
           View All
         </Link>
       </Box>
@@ -36,7 +36,7 @@ const RecentProducts = () => {
           {recentProducts.map(({ id, name, category, stock, price, status }) => (
             <TableRow key={id}>
               <TableCell>
-                <Typography fontWeight="bold">{name}</Typography>
+                <Typography style={{ fontWeight: 'bold' }}>{name}</Typography>
                 <Typography variant="caption" color="textSecondary">
                   #{id}
                 </Typography>
@@ -47,12 +47,14 @@ const RecentProducts = () => {
               <TableCell>
                 <Box
                   component="span"
-                  sx={{
+                  style={{
                     backgroundColor: statusColors[status],
                     color: 'white',
-                    px: 1,
-                    py: 0.3,
-                    borderRadius: 1,
+                    paddingLeft: 8,
+                    paddingRight: 8,
+                    paddingTop: 2,
+                    paddingBottom: 2,
+                    borderRadius: 4,
                     fontSize: '0.75rem',
                     fontWeight: 'bold',
                   }}

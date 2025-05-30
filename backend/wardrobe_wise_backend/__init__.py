@@ -96,6 +96,13 @@ def main(global_config, **settings):
     config.add_view(api_views.update_user, route_name='update_user', renderer='json', request_method='PUT', permission='authenticated')
     config.add_route('delete_user', '/users/{id}')
     config.add_view(api_views.delete_user, route_name='delete_user', renderer='json', request_method='DELETE', permission='authenticated')
+    # Explicitly add route and views for /sales to fix 404 issue
+    # Remove manual route and views for /sales to avoid conflict with Cornice service
+    # config.add_route('sales', '/sales')
+    # from .views import api as api_views
+    # config.add_view(api_views.get_sales, route_name='sales', renderer='json', request_method='GET')  # Removed permission for testing
+    # config.add_view(api_views.create_sale, route_name='sales', renderer='json', request_method='POST')  # Removed permission for testing
+
     config.scan('wardrobe_wise_backend.views')
     return config.make_wsgi_app()
 

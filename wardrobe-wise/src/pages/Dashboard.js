@@ -1,6 +1,7 @@
 // src/pages/Dashboard.js
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Typography, Paper, CircularProgress, Alert } from '@mui/material';
+import { Box, Grid, Typography, Paper, CircularProgress } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import { Line, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
 import LowStockAlert from '../components/LowStockAlert';
@@ -83,7 +84,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box style={{ padding: 24 }}>
       <Typography variant="h4" gutterBottom>
         Dashboard
       </Typography>
@@ -93,33 +94,33 @@ const Dashboard = () => {
       <Grid container spacing={3}>
         {/* Summary Cards */}
         <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ padding: 2, textAlign: 'center' }}>
+          <Paper style={{ padding: 16, textAlign: 'center' }}>
             <Typography variant="h6">Total Products</Typography>
-            <Typography variant="h4" color="primary" sx={{ mt: 1 }}>
+            <Typography variant="h4" color="primary" style={{ marginTop: 8 }}>
               {totalProducts}
             </Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ padding: 2, textAlign: 'center' }}>
+          <Paper style={{ padding: 16, textAlign: 'center' }}>
             <Typography variant="h6">Total Stock</Typography>
-            <Typography variant="h4" color="secondary" sx={{ mt: 1 }}>
+            <Typography variant="h4" color="secondary" style={{ marginTop: 8 }}>
               {totalStock}
             </Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ padding: 2, textAlign: 'center' }}>
+          <Paper style={{ padding: 16, textAlign: 'center' }}>
             <Typography variant="h6">Low Stock Items</Typography>
-            <Typography variant="h4" color="error" sx={{ mt: 1 }}>
+            <Typography variant="h4" color="error" style={{ marginTop: 8 }}>
               {lowStockCount}
             </Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper sx={{ padding: 2, textAlign: 'center' }}>
+          <Paper style={{ padding: 16, textAlign: 'center' }}>
             <Typography variant="h6">Total Sales (Month)</Typography>
-            <Typography variant="h4" color="success" sx={{ mt: 1 }}>
+            <Typography variant="h4" color="success" style={{ marginTop: 8 }}>
               Rp {totalSalesThisMonth.toLocaleString()}
             </Typography>
           </Paper>
@@ -127,7 +128,7 @@ const Dashboard = () => {
 
         {/* Charts */}
         <Grid item xs={12} md={6}>
-          <Paper sx={{ padding: 2 }}>
+          <Paper style={{ padding: 16 }}>
             <Typography variant="h6" gutterBottom>
               Penjualan Bulanan
             </Typography>
@@ -135,7 +136,7 @@ const Dashboard = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ padding: 2 }}>
+          <Paper style={{ padding: 16 }}>
             <Typography variant="h6" gutterBottom>
               Jumlah Transaksi per Bulan
             </Typography>
@@ -145,7 +146,7 @@ const Dashboard = () => {
 
         {/* Low Stock Alerts */}
         <Grid item xs={12} md={6}>
-          <Paper sx={{ padding: 2 }}>
+          <Paper style={{ padding: 16 }}>
             <Typography variant="h6" gutterBottom>
               Low Stock Alerts
             </Typography>
