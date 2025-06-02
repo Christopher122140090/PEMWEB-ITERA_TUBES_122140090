@@ -11,9 +11,9 @@ Proyek ini merupakan tugas besar untuk mata kuliah Pemrograman Web di ITERA. Apl
 
 ## Teknologi yang Digunakan
 
-- **Frontend**: HTML, CSS, JavaScript
-- **Backend**: Python (kemungkinan menggunakan Flask atau Django)
-- **Database**: SQLite atau PostgreSQL (tergantung pada konfigurasi)
+- **Frontend**: React dan MUI UI
+- **Backend**: Python 
+- **Database**: PostgreSQL
 - **Manajemen Paket**: Node.js dengan npm
 
 ## Struktur Proyek
