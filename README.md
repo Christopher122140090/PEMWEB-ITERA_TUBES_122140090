@@ -99,7 +99,3 @@ chmod +x run_tests.sh
 ## Kontribusi
 
 Kontribusi sangat dihargai! Silakan fork repositori ini dan buat pull request untuk perbaikan atau penambahan fitur.
-
-## Lisensi
-
-Proyek ini dilisensikan di bawah [MIT License](LICENSE).
